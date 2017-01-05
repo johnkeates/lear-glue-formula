@@ -1,0 +1,7 @@
+# -*- coding: utf-8 -*-
+# vim: ft=yaml
+lear-glue:
+  pkg: lear-glue
+  config: '/etc/lear-glue'
+  service:
+    name: lear-glue

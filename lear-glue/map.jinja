@@ -1,0 +1,33 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{## Start with  defaults from defaults.sls ##}
+{% import_yaml 'lear-glue/defaults.yaml' as default_settings %}
+
+{##
+Setup variable using grains['os_family'] based logic, only add key:values here
+that differ from whats in defaults.yaml
+##}
+{% set os_family_map = salt['grains.filter_by']({
+        'Debian': {},
+        'Suse': {},
+        'Arch': {
+            "pkg" : 'lear-glue-arch',
+        },
+        'RedHat': {
+            "config": '/etc/lear-glue.conf',
+        },
+  }
+  , grain="os_family"
+  , merge=salt['pillar.get']('lear-glue:lookup'))
+%}
+{## Merge the flavor_map to the default settings ##}
+{% do default_settings.lear-glue.update(os_family_map) %}
+
+{## Merge in lear-glue:lookup pillar ##}
+{% set lear-glue = salt['pillar.get'](
+        'lear-glue',
+        default=default_settings.lear-glue,
+        merge=True
+    )
+%}
