@@ -1,3 +1,7 @@
-lear-glue:
+lear:
+  switches:
+    enable_combiner: true
+    enable_haproxy: true    
   lookup:
-    master: lear-glue-master
+    fs:
+      pki_path: /etc/ssl

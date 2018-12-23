@@ -1,0 +1,7 @@
+# -*- coding: utf-8 -*-
+# vim: ft=yaml
+lear:
+  pkg: lear
+  config: '/etc/lear'
+  service:
+    name: lear

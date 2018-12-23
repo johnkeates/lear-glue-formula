@@ -2,7 +2,7 @@
 # vim: ft=jinja
 
 {## Start with  defaults from defaults.sls ##}
-{% import_yaml 'lear-glue/defaults.yaml' as default_settings %}
+{% import_yaml 'lear/defaults.yaml' as default_settings %}
 
 {##
 Setup variable using grains['os_family'] based logic, only add key:values here
@@ -12,22 +12,22 @@ that differ from whats in defaults.yaml
         'Debian': {},
         'Suse': {},
         'Arch': {
-            "pkg" : 'lear-glue-arch',
+            "pkg" : 'lear-arch',
         },
         'RedHat': {
-            "config": '/etc/lear-glue.conf',
+            "config": '/etc/lear.conf',
         },
   }
   , grain="os_family"
-  , merge=salt['pillar.get']('lear-glue:lookup'))
+  , merge=salt['pillar.get']('lear:lookup'))
 %}
 {## Merge the flavor_map to the default settings ##}
-{% do default_settings.lear-glue.update(os_family_map) %}
+{% do default_settings.lear.update(os_family_map) %}
 
-{## Merge in lear-glue:lookup pillar ##}
-{% set lear-glue = salt['pillar.get'](
-        'lear-glue',
-        default=default_settings.lear-glue,
+{## Merge in lear:lookup pillar ##}
+{% set lear = salt['pillar.get'](
+        'lear',
+        default=default_settings.lear,
         merge=True
     )
 %}

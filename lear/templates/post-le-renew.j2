@@ -1,0 +1,32 @@
+#!/bin/bash
+
+for d in /etc/letsencrypt/live/*/ ; do
+    currentcert=$(basename $d) 
+   
+    echo "Scanning $d for $currentcert ..."
+
+    currentfull=($d"fullchain.pem")
+    currentkey=($d"privkey.pem")
+
+    if [ -s $currentfull ]
+    then 
+        echo "$currentfull exists and is not empty"
+
+        if [ -s $currentkey ]
+        then 
+            echo "$currentkey exists and is not empty"
+            echo "combining chain and key..."
+            cat $currentfull $currentkey > /etc/ssl/haproxy/$currentcert.crt
+             
+        else
+            echo "Aborted: $currentkey does not exist, or is empty."
+        fi
+        
+    else
+        echo "Aborted: $currentfull does not exist, or is empty."
+    fi
+done
+
+echo "restarting haproxy"
+
+systemctl restart haproxy
